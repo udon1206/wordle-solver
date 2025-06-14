@@ -1,6 +1,6 @@
 use crate::state::AppState;
 use crate::wordle::propose_optimal_string;
-use actix_web::{web, HttpResponse, Responder, get};
+use actix_web::{get, web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 
 /// リクエスト JSON
