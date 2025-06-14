@@ -17,6 +17,7 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::default()
             .allowed_origin("http://127.0.0.1:5173") // フロントのオリジン
             .allowed_origin("http://localhost:5173") // フロントのオリジン
+            .allowed_origin("https://wordle-solver-frontend.onrender.com") // フロントのオリジン
             .allowed_methods(vec!["POST"])
             .allowed_header(header::CONTENT_TYPE)
             .max_age(3600);
