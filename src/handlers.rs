@@ -1,6 +1,6 @@
 use crate::state::AppState;
 use crate::wordle::propose_optimal_string;
-use actix_web::{web, HttpResponse, Responder};
+use actix_web::{web, HttpResponse, Responder, get};
 use serde::{Deserialize, Serialize};
 
 /// リクエスト JSON
@@ -19,6 +19,7 @@ pub struct NextGuessResponse {
 /// ルート設定
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.route("/next_guess", web::post().to(next_guess_handler));
+    cfg.service(root_handler);
 }
 
 /// 次の推測を返すハンドラ
@@ -33,4 +34,9 @@ async fn next_guess_handler(
         &data.guesses,
     );
     HttpResponse::Ok().json(NextGuessResponse { next_guess: next })
+}
+
+#[get("/")]
+pub async fn root_handler() -> impl Responder {
+    HttpResponse::Ok().finish()
 }
