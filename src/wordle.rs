@@ -4,25 +4,33 @@ const POW3: [usize; 5] = [1, 3, 9, 27, 81];
 
 /// Wordle のフィードバックパターンを数値化
 pub fn pattern_code(answer: &str, guess: &str) -> usize {
+    let a = answer.as_bytes();
+    let g = guess.as_bytes();
     let mut code = 0;
-    let mut ans_chars: Vec<char> = answer.chars().collect();
-    let guess_chars: Vec<char> = guess.chars().collect();
-    // 緑
+    let mut counts = [0u8; 26]; // a〜z の出現残数カウント
+
+    // 1) 緑判定：一致なら即コード加算、そうでなければ counts にカウント
     for i in 0..5 {
-        if guess_chars[i] == ans_chars[i] {
-            ans_chars[i] = '\0';
+        if g[i] == a[i] {
+            // green = 2
             code += 2 * POW3[i];
+        } else {
+            counts[(a[i] - b'a') as usize] += 1;
         }
     }
-    // 黄
+
+    // 2) 黄判定：非緑の位置だけ、残カウントがあればコード加算
     for i in 0..5 {
-        if guess_chars[i] != answer.chars().nth(i).unwrap() {
-            if let Some(pos) = ans_chars.iter().position(|&c| c == guess_chars[i]) {
-                ans_chars[pos] = '\0';
-                code += 1 * POW3[i];
+        if g[i] != a[i] {
+            let idx = (g[i] - b'a') as usize;
+            if counts[idx] > 0 {
+                // yellow = 1
+                code += POW3[i];
+                counts[idx] -= 1;
             }
         }
     }
+
     code
 }
 
